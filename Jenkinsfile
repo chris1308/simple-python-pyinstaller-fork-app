@@ -30,6 +30,7 @@ pipeline {
                 script {
                     // Change directory to where the test files are located
                     dir('sources') {
+                        sh 'mkdir -p test-reports'
                         // Run the tests using pytest
                         sh 'pytest --verbose --junit-xml test-reports/results.xml test_calc.py'
                     }
