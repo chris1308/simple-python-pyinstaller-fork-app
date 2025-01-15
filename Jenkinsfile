@@ -30,14 +30,18 @@ pipeline {
                 script {
                     // Change directory to where the test files are located
                     dir('sources') {
-                        // Run the tests using pytest
-                        sh 'pytest --verbose --junit-xml test-reports/results.xml test_calc.py'
+                        // Ensure the test-reports directory exists
+                        sh 'mkdir -p test-reports'
+                        // Run the tests using pytest, generate XML report
+                        sh 'pytest --verbose --junit-xml=test-reports/results.xml test_calc.py'
+                        // List files to verify the report exists
+                        sh 'ls -l test-reports/'
                     }
                 }
             }
             post {
                 always {
-                    junit 'test-reports/results.xml'  // Publish the test results
+                    junit '**/test-reports/results.xml'  // Publish the test results
                 }
             }
         }
