@@ -22,13 +22,13 @@ node {
                 // Change directory to where the test files are located
                 dir('sources') {
                     // Ensure the test-reports directory exists
-                    sh 'mkdir -p ${testReportDir}'
+                    sh "mkdir -p ${testReportDir}"
                     
                     // Run the tests using pytest and generate XML report
-                    sh 'pytest --verbose --junit-xml=${testReportDir}/results.xml test_calc.py'
+                    sh "pytest --verbose --junit-xml=${testReportDir}/results.xml test_calc.py"
                     
                     // List files in the test-reports directory to verify the report exists
-                    sh 'ls -l ${testReportDir}'
+                    sh "ls -l ${testReportDir}"
                 }
             }
         }
