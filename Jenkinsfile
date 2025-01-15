@@ -6,16 +6,13 @@ node {
         stage('Build') {
             // Run the build stage in a Docker container with the image 'python:2-alpine'
             docker.image('python:2-alpine').inside('-u root:root') {
-                // Change directory to where the sources are located and run build steps
-                dir('sources') {
-                    // Ensure that the necessary files are present
-                    sh 'ls -l'  // List files to make sure add2vals.py and calc.py are present
-                    // Install dependencies like pytest if not already installed
-                    sh 'pip install --upgrade pip'  // Upgrade pip
-                    sh 'pip install pytest'          // Install pytest if needed
-                    // Compile the Python scripts
-                    sh 'python -m py_compile add2vals.py calc.py'
-                }
+                // Ensure that the necessary files are present
+                sh 'ls -l'  // List files to make sure add2vals.py and calc.py are present
+                // Install dependencies like pytest if not already installed
+                sh 'pip install --upgrade pip'  // Upgrade pip
+                sh 'pip install pytest'          // Install pytest if needed
+                // Compile the Python scripts
+                sh 'python -m py_compile add2vals.py calc.py'
             }
         }
 
