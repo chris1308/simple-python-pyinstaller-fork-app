@@ -11,7 +11,8 @@ node {
                     // Install dependencies like pytest if not already installed
                     sh 'pip install --upgrade pip'  // Upgrade pip
                     sh 'pip install pytest'          // Install pytest if needed
-                    sh 'python -m py_compile add2vals.py calc.py'  // Compile the Python scripts
+                    // Compile the Python scripts
+                    sh 'python -m py_compile add2vals.py calc.py'
                 }
             }
         }
