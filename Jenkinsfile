@@ -2,7 +2,7 @@
 node {
     // Define environment for the whole pipeline
     def testReportDir = 'sources/test-reports'
-
+    def deploymentDir = '/var/www/react-app'
     try {
         stage('Build') {
             // Run the build stage in a Docker container with the image 'python:2-alpine'
@@ -32,6 +32,21 @@ node {
                     
                     // List files in the test-reports directory to verify the report exists
                     sh "ls -l ${testReportDir}"
+                }
+            }
+        }
+        stage('Deploy') {
+            // Deploy application to a local directory
+            stage('Deploy to Localhost') {
+                dir('sources') {
+                    // Ensure the deployment directory exists
+                    sh "mkdir -p ${deploymentDir}"
+
+                    // Copy files to the deployment directory
+                    sh "cp -r * ${deploymentDir}/"
+
+                    // Run the application
+                    sh "cd ${deploymentDir} && python add2vals.py 5 10 &"
                 }
             }
         }
