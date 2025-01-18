@@ -35,21 +35,39 @@ node {
                 }
             }
         }
-        stage('Deploy') {
-            // Deploy application to a local directory
-            stage('Deploy to Localhost') {
-                dir('sources') {
-                    // Ensure the deployment directory exists
-                    sh "mkdir -p ${deploymentDir}"
+    stage('Deploy') {
+        dir('sources') {
+            // Ensure the deployment directory exists
+            sh "mkdir -p ${deploymentDir}"
 
-                    // Copy files to the deployment directory
-                    sh "cp -r * ${deploymentDir}/"
+            // Copy files to the deployment directory
+            sh "cp -r * ${deploymentDir}/"
 
-                    // Run the application
-                    sh "cd ${deploymentDir} && python add2vals.py 5 10 &"
-                }
-            }
+            // Start the application in the background
+            sh """
+            cd ${deploymentDir}
+            nohup python add2vals.py 5 10 > app.log 2>&1 &
+            echo $! > app.pid
+            echo "Application started and is running in the background."
+            """
+
+            // Delay for 1 minute
+            echo "Waiting for 1 minute while the application runs..."
+            sleep(time: 1, unit: 'MINUTES')
+
+            // Stop the application gracefully
+            sh """
+            cd ${deploymentDir}
+            if [ -f app.pid ]; then
+                echo "Stopping the application..."
+                kill \$(cat app.pid) || echo "Application already stopped"
+                rm -f app.pid
+            else
+                echo "Application PID file not found, meaning it has already stopped."
+            fi
+            """
         }
+    }
     } finally {
         // Publish the test results using the junit plugin
         junit '**/sources/test-reports/results.xml'  // Publish the test results
