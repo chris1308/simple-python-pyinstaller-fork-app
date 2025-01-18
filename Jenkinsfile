@@ -35,6 +35,21 @@ node {
                 }
             }
         }
+
+        stage('Manual Approval') {
+            // Wait for user input to proceed or abort
+            def userInput = input(
+                id: 'Approval', 
+                message: 'Lanjutkan ke tahap Deploy?', 
+                parameters: [
+                    choice(name: 'Decision', choices: ['Proceed', 'Abort'], description: 'Select an option:')
+                ]
+            )
+            if (userInput == 'Abort') {
+                error('Pipeline aborted by user.')
+            }
+        }
+
         stage('Deploy') {
             dir('sources') {
                 // Ensure the deployment directory exists
