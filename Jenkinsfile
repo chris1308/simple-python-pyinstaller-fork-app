@@ -2,7 +2,7 @@
 node {
     // Define environment for the whole pipeline
     def testReportDir = 'sources/test-reports'
-    def deploymentDir = '/var/www/react-app'
+    def deploymentDir = '/home/jenkins/python-app'
     try {
         stage('Build') {
             // Run the build stage in a Docker container with the image 'python:2-alpine'
